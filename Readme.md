@@ -85,7 +85,7 @@ As seguintes configurações devem ser editadas:
 1. **Additional Libraries**: Deve-se adicionar a definição *m* e *arm_cortex_M3l_math*, também correspondentes ao processador ARM Cortex-M3.
 2. **Additional Library Directories**: Deve incluir o diretório *Lib\GCC* do CMSIS.
 
-## Observações do processo
+## Observações sobre o processo
 
 O mais complicado do processo é conseguir compilar corretamente a biblioteca. Para esse projeto foi executado um processo de tentativa e erro até conseguir fazer a biblioteca funcionar. Alguns detalhes ainda não estão totalmente claros para mim.
 
