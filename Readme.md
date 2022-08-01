@@ -1,89 +1,91 @@
-# Usando a biblioteca GNU Scientific Library - GSL com PSoC (ARM Cortex-M3)
+# Using the GNU Scientific Library - GSL with PSoC (ARM Cortex-M3)
 
-Esse projeto descreve como compilar e utilizar a biblioteca GNU Scientific Library (GSL) com processadores ARM Cortex-M3 e a plataforma PSoC.
+This project describes how to compile and use the GNU Scientific Library (GSL) with ARM Cortex-M3 processors and PSoC platform.
 
-## Plataforma utilizada
 
-1. GNU GSL versão 2.7
-2. Linux Mint 19.2 (Compilação da Biblioteca).
-3. GNU Tools for Arm Embedded Processors 7-2018-q3-update -  7.3.1 20180622 (release) [ARM/embedded-7-branch revision 261907] (Compilação da Biblioteca).
-4. PSoC Creator 4.4 no Windows 10 (Integração com o PSoC).
+## Plataform
+
+1. GNU GSL version 2.7
+2. Linux Mint 19.2 (Library Compilation).
+3. GNU Tools for Arm Embedded Processors 7-2018-q3-update - 7.3.1 20180622 (release) [ARM/embedded-7-branch revision 261907] (Library Build).
+4. PSoC Creator 4.4 - Windows 10 (PSoC Integration).
 5. CY8KIT-059 PSoC 5LP Prototyping Kit.
 
-## Procedimento para compilar a biblioteca
+## Procedure to compile the library
 
-O procedimento para compilar a bilioteca é composto das seguintes etapas:
+The procedure to compile the library consists of the following steps:
 
-1. Instalação do GCC para ARM.
-2. Download da biblioteca GNU GSL.
-3. Configurar, compilar e instalar.
+1. Installing GCC for ARM.
+2. Download the GNU GSL library.
+3. Configure, compile and install.
 
-Abaixo são apresentados os comandos no terminal necessários para realizar essa operação:
+Below are the commands in the terminal needed to perform this operation:
+
 
 ```sh
-# Instala o GCC para ARM.
+# Install GCC for ARM.
 sudo add-apt-repository ppa:team-gcc-arm-embedded/ppa
 sudo apt-get update
 sudo apt-get install gcc-arm-embedded
 
-# Faz o download da biblioteca GSL e descompacta na subpasta gsl
+# Download the GSL library and unzip it in the gsl subfolder
 wget -c https://mirror.ibcp.fr/pub/gnu/gsl/gsl-latest.tar.gz
 tar xvfz gsl-latest.tar.gz
-# Após esse comando, foi criado o diretório gsl-2.7. O diretório pode mudar de acordo com a versão.
+# After this command, the gsl-2.7 directory was created. The directory may change depending on the version.
 
-#Cria um diretório para salvar a biblioteca compilada
+# Create a directory to save the compiled library
 mkdir gslbin
-#Entra no diretório da biblioteca. Pode mudar de acordo com a versão.
+# Enter into library directory. It may change depending on the version.
 cd gsl-2.7
 
-#Configura
-#Você pode alterar o diretório onde a bilioteca será salva com a pasta definida no argumento --prefix
+# Configure
+# You can change the directory where the library will be saved with the folder defined in the --prefix argument
 ./configure --host=arm-none-eabi --prefix=../gslbin  LDFLAGS="-lc_nano -lnosys -specs=nosys.specs" --disable-shared --enable-static  CFLAGS="-mcpu=cortex-m3 -DSIZEOF_LONG=4 -DSIZEOF_LONG_LONG=8"
-#Compila
+# Comppile
 make
-#Opcional - Testa
+# Optional Test
 make check
-#Copia a bilioteca para a pasta gslbin
+# Copy library to gslbin folder
 make install
 ```
 
-Ao final, a biblioteca estará no diretório **gslbin**.
+At the end, the library will be in the **gslbin** directory.
 
-## Configuração do PSoC Creator
+## PSoC Creator Setup
 
-Copie a pasta **gslbin** para o seu projeto. Renomeie essa pasta para **gsl** apenas. A Figura 1 ilustra como ficou no meu projeto.
+Copy the **gslbin** folder to your project. Rename this folder to **gsl** only. Figure 1 show the configuration required.
 
-![Figura 1 - Configuração do compilador.](folderexample.jpg "Exemplo de estrutura de diretórios de um projeto do PSoC com a biblioteca GNU GSL.")
+![Figure 1 - Compiler configuration.](folderexample.jpg "Example directory structure of a PSoC project with the GNU GSL library.")
 
-**Figura 1** - Exemplo de estrutura de diretórios de um projeto do PSoC com a biblioteca GNU GSL.
+**Figure 1** - Example directory structure of a PSoC project with the GNU GSL library.
 
-Em seguida você deve configurar o compilador e o linker para utilizar essa bibliotca. 
+Then you must configure the compiler and linker to use this library.
 
-### Configurando as opções do compilador
+### Compiler settings
 
-Clique com o botão direito no seu projeto e no menu escolha a opção *Build Settings...*. Em seguida expanda a seção para o compilador *ARM GCC* -> *Compiler* -> *General* (Figura 2).
+Right click on your project and in the menu choose *Build Settings...*. Then expand the section for the *ARM GCC* compiler -> *Compiler* -> *General* (Figure 2).
 
-![Figura 2 - Configuração do compilador.](compilersettings.png "Figura 2 - Configuração do compilador.")
+![Figure 2 - Compiler settings.](compilersettings.png "Figure 2 - Compiler settings.")
 
-**Figura 2** - Configuração do compilador.
+**Figure 2** - Compiler settings.
 
-As seguintes configurações devem ser editadas:
+The following settings must be edited:
 
-1. **Additional Include Directories**: Deve incluir o diretório *Include* dentro da pasta GSL.
-2. **Preprocessor Definitions**: Deve-se adicionar a definição *ARM_MATH_CM3*, correspondente ao processador Cortex-M3 do PSoC 5lp.
+1. **Additional Include Directories**: It must include the *Include* directory inside the GSL folder.
+2. **Preprocessor Definitions**: You must add the definition *ARM_MATH_CM3*, corresponding to the Cortex-M3 processor of the PSoC 5lp.
 
-### Configurando as opções do *linker*
+### *Linker* Settings
 
-Em seguinda deve-se configurar o Linker. De maneira semelhante, devemos acessar o menu *Build Settings...* e em seguida a seção *ARM GCC* -> *Linker* -> *General* (Figura 2).
+Next, you must configure the Linker. Access the *Build Settings...* menu and then the *ARM GCC* -> *Linker* -> *General* section (Figure 3).
 
-![Figura 3 - Configuração do linker.](linkersettings.png "Figura 3 - Configuração do linker.")
+![Figure 3 - Linker Settings.](linkersettings.png "Figure 3 - Linker Settings.")
 
-**Figura 3** - Configuração do *linker*.
+**Figure 3** - *Linker* settings.
 
-As seguintes configurações devem ser editadas:
+The following settings must be edited:
 
-1. **Additional Libraries**: Deve-se adicionar a definição *m* e *arm_cortex_M3l_math*, também correspondentes ao processador ARM Cortex-M3.
-2. **Additional Library Directories**: Deve incluir o diretório *Lib\GCC* do CMSIS.
+1. **Additional Libraries**: You must add the definition *m* and *arm_cortex_M3l_math*, also corresponding to the ARM Cortex-M3 processor.
+2. **Additional Library Directories**: Must include the CMSIS *Lib\GCC* directory.
 
 ## Observações sobre o processo
 
